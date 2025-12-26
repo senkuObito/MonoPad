@@ -1,7 +1,5 @@
 {
   "name": "MonoPad - Universal Notepad",
   "description": "A high-end, minimalistic notepad with glassmorphic and classic themes, featuring drawing, gyro-parallax, and DOCX support.",
-  "requestFramePermissions": [
-    "camera"
-  ]
+  "requestFramePermissions": []
 }

@@ -15,8 +15,7 @@
     "docx": "9.0.3",
     "mammoth": "1.8.0",
     "file-saver": "2.0.5",
-    "qrcode.react": "4.1.0",
-    "jsqr": "1.4.0"
+    "qrcode.react": "4.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

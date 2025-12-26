@@ -20,6 +20,7 @@
             --glass-blur: 40px;
             --parallax-x: 50%;
             --parallax-y: 50%;
+            --card-radius: 2.5rem;
         }
 
         body.theme-dark-glass {
@@ -59,7 +60,7 @@
             background-color: var(--bg-color);
             color: var(--text-primary);
             overflow: hidden;
-            height: 100vh;
+            height: 100dvh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -71,14 +72,15 @@
             border: 1px solid var(--border-color);
             box-shadow: 0 40px 120px -20px rgba(0, 0, 0, 0.6);
             transition: background-color 0.6s ease, border-color 0.6s ease, transform 0.15s ease-out;
-            height: 88vh;
+            height: 88dvh;
             width: 92%;
             max-width: 1300px;
             position: relative;
             z-index: 10;
-            /* Allow dropdowns to overflow if needed, but clip main contents */
+            display: flex;
+            flex-direction: column;
             overflow: visible; 
-            border-radius: 2.5rem;
+            border-radius: var(--card-radius);
         }
 
         body.glass-enabled:not(.theme-maroon-beige):not(.theme-olive-beige) .main-card {
@@ -88,7 +90,7 @@
 
         .bg-mesh {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            top: 0; left: 0; width: 100vw; height: 100dvh;
             z-index: -2;
             overflow: hidden;
         }
@@ -122,34 +124,86 @@
         }
 
         .themed-dropdown {
-            background: rgba(15, 15, 15, 0.95);
+            background: rgba(15, 15, 15, 0.98);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            max-height: 55dvh;
+            overflow-y: auto;
+            scrollbar-width: none;
+            border-radius: 1.5rem;
         }
+        .themed-dropdown::-webkit-scrollbar { display: none; }
 
         body.theme-maroon-beige .themed-dropdown,
-        body.theme-olive-beige .themed-dropdown {
-            background: #2a0a0a;
-            border: 1px solid rgba(255,255,255,0.05);
+        body.theme-maroon-beige .sync-modal-content {
+            background: #4a1414;
+            border: 1px solid rgba(255,255,255,0.1);
         }
         
-        body.theme-olive-beige .themed-dropdown {
-            background: #222e11;
+        body.theme-olive-beige .themed-dropdown,
+        body.theme-olive-beige .sync-modal-content {
+            background: #35421a;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .sync-modal-bg {
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .sync-modal-content {
+            background: var(--container-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5);
+            max-width: 85vw;
+            max-height: 80dvh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-radius: var(--card-radius);
+        }
+
+        .sync-modal-inner {
+            overflow-y: auto;
+            scrollbar-width: none;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sync-modal-inner::-webkit-scrollbar { display: none; }
+
+        body.glass-enabled:not(.theme-maroon-beige):not(.theme-olive-beige) .sync-modal-content {
+            backdrop-filter: blur(40px) saturate(150%);
+            -webkit-backdrop-filter: blur(40px) saturate(150%);
         }
 
         @media (max-width: 768px) {
-            .main-card {
-                height: 94vh !important;
-                width: 92% !important;
-                border-radius: 2rem !important;
+            :root {
+                --card-radius: 1.5rem;
             }
+            .main-card {
+                height: 90dvh !important;
+                width: 90vw !important;
+                border-radius: var(--card-radius) !important;
+            }
+            .themed-dropdown {
+                width: calc(90vw - 1rem) !important;
+                right: 0.5rem !important;
+                left: auto !important;
+                border-radius: 1rem;
+            }
+            .sync-modal-content {
+                border-radius: var(--card-radius) !important;
+                max-width: 90vw;
+            }
+            .sync-modal-inner {
+                padding: 1.5rem;
+            }
+            .logo-font { letter-spacing: 0.2em !important; }
         }
     </style>
 <script type="importmap">
@@ -163,7 +217,6 @@
     "mammoth": "https://esm.sh/mammoth@1.8.0",
     "file-saver": "https://esm.sh/file-saver@2.0.5",
     "qrcode.react": "https://esm.sh/qrcode.react@4.1.0?external=react",
-    "jsqr": "https://esm.sh/jsqr@1.4.0",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/"
   }
