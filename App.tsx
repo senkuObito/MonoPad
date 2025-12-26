@@ -71,7 +71,8 @@ const App: React.FC = () => {
 
     const savedTheme = (localStorage.getItem('monopad_theme') as Theme) || 'dark-glass';
     setTheme(savedTheme);
-    setIsGlassMode(localStorage.getItem('monopad_glass') !== 'false');
+    const glassPref = localStorage.getItem('monopad_glass');
+    setIsGlassMode(glassPref !== 'false');
     
     const savedFont = localStorage.getItem('monopad_font');
     if (savedFont) {
@@ -319,7 +320,16 @@ const App: React.FC = () => {
                      <button key={f.value} onClick={() => { setAppFont(f.value); setShowSettingsMenu(false); }} className={`w-full text-left px-3 py-2 text-[9px] font-bold uppercase tracking-widest rounded hover:bg-white/10 ${appFont === f.value ? 'opacity-100 bg-white/5' : 'opacity-40'}`} style={{ fontFamily: f.value }}>{f.label}</button>
                    ))}
                 </div>
+                
+                <div className="px-5 py-3 border-b border-white/5 mb-2 flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-widest">Glass Effect</span>
+                  <button onClick={() => setIsGlassMode(!isGlassMode)} className={`w-10 h-5 rounded-full transition-all relative ${isGlassMode ? 'bg-white/30' : 'bg-white/5'}`}>
+                    <div className="absolute top-1 w-3 h-3 rounded-full bg-white transition-all shadow" style={{ left: isGlassMode ? '24px' : '4px' }} />
+                  </button>
+                </div>
+
                 <button onClick={() => { toggleFullscreen(); setShowSettingsMenu(false); }} className="w-full text-left px-5 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-white/5">Toggle Fullscreen</button>
+                
                 <div className="px-5 py-2 border-t border-white/5 mt-2">
                    <p className="text-[7px] uppercase tracking-widest opacity-30 mb-2">Export</p>
                    <div className="flex gap-2">
