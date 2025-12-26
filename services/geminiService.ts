@@ -2,10 +2,21 @@ import { GoogleGenAI } from "@google/genai";
 
 export type AiMode = 'none' | 'grammar' | 'email' | 'message';
 
+const getApiKey = () => {
+  try {
+    return process.env.API_KEY || "";
+  } catch (e) {
+    return "";
+  }
+};
+
 export const getAiSuggestion = async (text: string, mode: AiMode): Promise<string | null> => {
   if (!text.trim() || mode === 'none') return null;
 
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = getApiKey();
+  if (!apiKey) return null;
+
+  const ai = new GoogleGenAI({ apiKey });
   
   let systemInstruction = "";
   if (mode === 'grammar') {
@@ -38,7 +49,11 @@ export const getAiSuggestion = async (text: string, mode: AiMode): Promise<strin
 
 export const refineText = async (text: string): Promise<string> => {
   if (!text.trim()) return text;
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  
+  const apiKey = getApiKey();
+  if (!apiKey) return text;
+
+  const ai = new GoogleGenAI({ apiKey });
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
     contents: `Refine the following note for clarity, better grammar, and a professional yet minimalist tone. Keep the original meaning intact. 

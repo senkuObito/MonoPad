@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700;6..96,900&family=Inter:wght@100;200;400;700;900&family=JetBrains+Mono:wght@400&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- ES Module Shims: Required for Import Maps on older browsers like iOS 12 (iPhone 6) -->
+    <!-- ES Module Shims for legacy support (iPhone 6 / iOS 12) -->
     <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
 
     <style>
@@ -78,8 +78,6 @@
             color: var(--text-primary);
             overflow: hidden;
             height: 100vh;
-            /* Support for older browsers and modern dynamic viewports */
-            height: 100dvh; 
             display: flex;
             align-items: center;
             justify-content: center;
@@ -90,32 +88,23 @@
             background: var(--container-bg);
             border: 1px solid var(--border-color);
             box-shadow: 0 40px 120px -20px rgba(0, 0, 0, 0.7);
-            transition: transform 0.1s ease-out, background-color 0.6s ease, border-color 0.6s ease, backdrop-filter 0.4s ease;
-            transform-style: preserve-3d;
+            transition: background-color 0.6s ease, border-color 0.6s ease;
             height: 94vh;
-            height: 94dvh;
+            width: 95%;
+            max-width: 1280px;
         }
 
         body.glass-enabled:not(.theme-maroon-beige):not(.theme-olive-beige) .main-card {
             backdrop-filter: blur(var(--glass-blur)) saturate(180%);
             -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-            background: var(--container-bg);
         }
 
-        body.glass-disabled .main-card {
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-            background: rgba(10, 10, 10, 0.95) !important;
-        }
-        
         .bg-mesh {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            height: 100dvh;
             z-index: -2;
             overflow: hidden;
             background: var(--bg-color);
-            transition: background-color 1s ease;
         }
 
         .mesh-gradient {
@@ -130,112 +119,51 @@
             filter: blur(80px);
             mix-blend-mode: screen; 
             pointer-events: none;
-            transition: background-image 0.5s ease;
         }
 
         .glass-header { border-bottom: 1px solid var(--border-color); }
         .themed-dropdown {
             background: var(--dropdown-bg);
             backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             border: 1px solid var(--border-color);
             box-shadow: 0 30px 100px rgba(0,0,0,0.8);
-        }
-        .dropdown-item:hover { background-color: var(--dropdown-hover); }
-
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        canvas { cursor: crosshair; touch-action: none; }
-        
-        * { font-style: normal !important; }
-        
-        textarea { 
-            color: var(--text-primary) !important; 
-            background: transparent; 
-            caret-color: var(--text-primary); 
-            width: 100%;
-            height: 100%;
-        }
-        textarea::placeholder { color: var(--text-secondary); opacity: 0.5; }
-        
-        .toggle-knob {
-            transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .suggestion-card {
-            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
         }
 
         .logo-font {
             font-family: 'Inter', sans-serif !important;
-            letter-spacing: 0.4em !important;
+            letter-spacing: 0.5em !important;
             text-transform: uppercase !important;
-            font-style: normal !important;
+            font-weight: 100 !important;
         }
 
-        .logo-thin { font-weight: 100 !important; }
         .logo-bold { font-weight: 900 !important; }
 
-        /* Mobile specific fixes */
         @media (max-width: 768px) {
-            .glass-header {
-                padding: 0.75rem 0.5rem !important;
-            }
             .main-card {
-                border-radius: 1rem !important;
                 height: 100vh !important;
-                height: 100dvh !important;
                 width: 100vw !important;
+                max-width: none !important;
                 border: none !important;
-                box-shadow: none !important;
-            }
-            .header-controls {
-                gap: 0.15rem !important;
+                border-radius: 0 !important;
             }
             .logo-font {
-                font-size: 0.75rem !important;
-                letter-spacing: 0.1em !important;
-            }
-            .themed-dropdown {
-                width: 90vw !important;
-                max-width: 300px;
-                right: 0 !important;
-                border-radius: 1.5rem !important;
-            }
-            textarea {
-              padding: 1.25rem !important;
-              font-size: 1.15rem !important;
-            }
-            footer {
-                padding: 0.75rem 1rem !important;
-            }
-        }
-
-        @supports (padding: env(safe-area-inset-bottom)) {
-            footer {
-                padding-bottom: calc(0.75rem + env(safe-area-inset-bottom)) !important;
-            }
-            .glass-header {
-                padding-top: calc(0.75rem + env(safe-area-inset-top)) !important;
+                letter-spacing: 0.2em !important;
             }
         }
     </style>
 <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "@google/genai": "https://esm.sh/@google/genai@1.34.0",
+    "docx": "https://esm.sh/docx@9.0.3",
+    "mammoth": "https://esm.sh/mammoth@1.8.0",
+    "file-saver": "https://esm.sh/file-saver@2.0.5",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
-    "docx": "https://esm.sh/docx@^9.0.3",
-    "mammoth": "https://esm.sh/mammoth@^1.8.0",
-    "file-saver": "https://esm.sh/file-saver@^2.0.5",
-    "peerjs": "https://esm.sh/peerjs@^1.5.4"
+    "react/": "https://esm.sh/react@^19.2.3/"
   }
 }
 </script>
@@ -244,6 +172,6 @@
     <div class="bg-mesh">
         <div class="mesh-gradient"></div>
     </div>
-    <div id="root" class="w-full h-full flex items-center justify-center p-0 md:p-12"></div>
+    <div id="root" class="w-full h-full flex items-center justify-center"></div>
 </body>
 </html>
