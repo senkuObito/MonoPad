@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>MonoPad | Universal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700;6..96,900&family=Inter:wght@100;200;400;700;900&family=JetBrains+Mono:wght@400&family=Playfair+Display:wght@400;700&display=swap"
-        rel="stylesheet">
-
-    <!-- ES Module Shims for legacy support (iPhone 6 / iOS 12) -->
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700;6..96,900&family=Inter:wght@100;200;400;700;900&family=JetBrains+Mono:wght@400&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
     <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
 
     <style>
@@ -22,28 +17,18 @@
             --container-bg: rgba(255, 255, 255, 0.03);
             --border-color: rgba(255, 255, 255, 0.1);
             --text-primary: rgba(255, 255, 255, 0.9);
-            --text-secondary: rgba(255, 255, 255, 0.3);
-            --dropdown-bg: rgba(15, 15, 15, 0.98);
-            --dropdown-hover: rgba(255, 255, 255, 0.05);
             --glass-blur: 40px;
-            --grad-color-1: transparent;
-            --grad-color-2: transparent;
-            --grad-color-3: transparent;
-            --grad-pos-1: 15% 15%;
-            --grad-pos-2: 85% 85%;
-            --grad-pos-3: 50% 50%;
+            --parallax-x: 50%;
+            --parallax-y: 50%;
         }
 
         body.theme-dark-glass {
             --bg-color: #030303;
-            --container-bg: rgba(255, 255, 255, 0.04);
+            --container-bg: rgba(255, 255, 255, 0.05);
             --border-color: rgba(255, 255, 255, 0.08);
             --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.4);
-            --dropdown-bg: rgba(10, 10, 10, 0.96);
-            --grad-color-1: rgba(255, 255, 255, 0.1);
-            --grad-color-2: rgba(255, 255, 255, 0.05);
-            --grad-color-3: rgba(255, 255, 255, 0.07);
+            --grad-color-1: rgba(255, 255, 255, 0.08);
+            --grad-color-2: rgba(255, 255, 255, 0.04);
         }
 
         body.theme-maroon-beige {
@@ -51,8 +36,6 @@
             --container-bg: #5a1a1a;
             --border-color: #3d0d0d;
             --text-primary: #fdfaf1;
-            --text-secondary: rgba(253, 250, 241, 0.5);
-            --dropdown-bg: #4a1414;
         }
 
         body.theme-olive-beige {
@@ -60,20 +43,15 @@
             --container-bg: #4a5d23;
             --border-color: #35421a;
             --text-primary: #fdfaf1;
-            --text-secondary: rgba(253, 250, 241, 0.5);
-            --dropdown-bg: #3b4b1c;
         }
 
         body.theme-twilight-vibe {
             --bg-color: #020205;
-            --container-bg: rgba(255, 255, 255, 0.04);
+            --container-bg: rgba(20, 20, 40, 0.5);
             --border-color: rgba(255, 255, 255, 0.1);
             --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.4);
-            --dropdown-bg: rgba(10, 5, 15, 0.98);
-            --grad-color-1: #ff2d55;
-            --grad-color-2: #1a1a4a;
-            --grad-color-3: #222;
+            --grad-color-1: rgba(255, 45, 85, 0.15); 
+            --grad-color-2: rgba(26, 26, 74, 0.4); 
         }
 
         body {
@@ -85,115 +63,96 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.8s ease, color 0.6s ease;
+            transition: background-color 0.8s ease;
         }
 
         .main-card {
             background: var(--container-bg);
             border: 1px solid var(--border-color);
             box-shadow: 0 40px 120px -20px rgba(0, 0, 0, 0.6);
-            transition: background-color 0.6s ease, border-color 0.6s ease, backdrop-filter 0.4s ease;
-            height: 94vh;
-            width: 95%;
-            max-width: 1280px;
+            transition: background-color 0.6s ease, border-color 0.6s ease, transform 0.15s ease-out;
+            height: 88vh;
+            width: 92%;
+            max-width: 1300px;
             position: relative;
             z-index: 10;
+            /* Allow dropdowns to overflow if needed, but clip main contents */
+            overflow: visible; 
+            border-radius: 2.5rem;
         }
 
         body.glass-enabled:not(.theme-maroon-beige):not(.theme-olive-beige) .main-card {
             backdrop-filter: blur(var(--glass-blur)) saturate(160%);
             -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
-            background: var(--container-bg);
-        }
-
-        body.glass-disabled .main-card {
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-            background: rgba(10, 10, 10, 0.98) !important;
-        }
-
-        body.theme-maroon-beige.glass-disabled .main-card,
-        body.theme-olive-beige.glass-disabled .main-card {
-            background: var(--container-bg) !important;
         }
 
         .bg-mesh {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: -2;
             overflow: hidden;
-            background: var(--bg-color);
         }
 
         .mesh-gradient {
             position: absolute;
-            inset: -40%;
-            width: 180%;
-            height: 180%;
-            background-image:
-                radial-gradient(circle at var(--grad-pos-1), var(--grad-color-1) 0%, transparent 55%),
-                radial-gradient(circle at var(--grad-pos-2), var(--grad-color-2) 0%, transparent 65%),
-                radial-gradient(circle at var(--grad-pos-3), var(--grad-color-3) 0%, transparent 45%);
+            inset: -50%;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                radial-gradient(circle at var(--parallax-x) var(--parallax-y), var(--grad-color-1) 0%, transparent 40%),
+                radial-gradient(circle at calc(100% - var(--parallax-x)) calc(100% - var(--parallax-y)), var(--grad-color-2) 0%, transparent 50%);
             filter: blur(80px);
-            mix-blend-mode: screen;
+            mix-blend-mode: screen; 
             pointer-events: none;
-            transition: background-image 1s ease;
-        }
-
-        .glass-header {
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .themed-dropdown {
-            background: var(--dropdown-bg);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 30px 100px rgba(0, 0, 0, 0.8);
         }
 
         .logo-font {
             font-family: 'Inter', sans-serif !important;
-            letter-spacing: 0.5em !important;
+            letter-spacing: 0.6em !important;
             text-transform: uppercase !important;
             font-weight: 100 !important;
         }
 
-        .logo-bold {
-            font-weight: 900 !important;
-        }
-
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        .logo-bold { font-weight: 900 !important; }
 
         textarea {
             background: transparent !important;
+            outline: none !important;
+            border: none !important;
+        }
+
+        .themed-dropdown {
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.theme-maroon-beige .themed-dropdown,
+        body.theme-olive-beige .themed-dropdown {
+            background: #2a0a0a;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        body.theme-olive-beige .themed-dropdown {
+            background: #222e11;
+        }
+
+        .sync-modal-bg {
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
         @media (max-width: 768px) {
             .main-card {
-                height: 100vh !important;
-                width: 100vw !important;
-                max-width: none !important;
-                border: none !important;
-                border-radius: 0 !important;
-            }
-
-            .logo-font {
-                letter-spacing: 0.2em !important;
+                height: 94vh !important;
+                width: 92% !important;
+                border-radius: 2rem !important;
             }
         }
     </style>
-    <script type="importmap">
+<script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@19.0.0",
@@ -203,19 +162,18 @@
     "docx": "https://esm.sh/docx@9.0.3",
     "mammoth": "https://esm.sh/mammoth@1.8.0",
     "file-saver": "https://esm.sh/file-saver@2.0.5",
+    "qrcode.react": "https://esm.sh/qrcode.react@4.1.0?external=react",
+    "jsqr": "https://esm.sh/jsqr@1.4.0",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/"
   }
 }
 </script>
 </head>
-
 <body class="theme-dark-glass glass-enabled">
     <div class="bg-mesh">
         <div class="mesh-gradient"></div>
     </div>
     <div id="root" class="w-full h-full flex items-center justify-center"></div>
-    <script type="module" src="/index.tsx"></script>
 </body>
-
 </html>

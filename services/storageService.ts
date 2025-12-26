@@ -1,8 +1,6 @@
 
 import { NoteData } from '../types';
-import * as docx from 'docx';
 import saveAs from 'file-saver';
-import mammoth from 'mammoth';
 
 const LOCAL_STORAGE_KEY = 'monopad_universal_data';
 
@@ -28,48 +26,39 @@ export const storageService = {
     return null;
   },
 
-  exportAsDocx: async (content: string) => {
-    const doc = new docx.Document({
-      sections: [{
-        properties: {},
-        children: content.split('\n').map(line => 
-          new docx.Paragraph({
-            children: [new docx.TextRun(line)],
-          })
-        ),
-      }],
-    });
-
-    const blob = await docx.Packer.toBlob(doc);
-    saveAs(blob, `monopad-export-${Date.now()}.docx`);
-  },
-
   exportAsJson: (content: string, drawing?: string) => {
     const data = JSON.stringify({ content, drawing, lastSaved: Date.now() });
     const blob = new Blob([data], { type: 'application/json' });
     saveAs(blob, `monopad-backup-${Date.now()}.json`);
   },
 
-  exportAsFile: (content: string): void => {
-    const blob = new Blob([content], { type: 'text/plain' });
-    saveAs(blob, `monopad-note-${Date.now()}.txt`);
-  },
-
   importFile: async (file: File): Promise<{content: string, drawing?: string}> => {
     const extension = file.name.split('.').pop()?.toLowerCase();
-    
-    if (extension === 'docx') {
-      const arrayBuffer = await file.arrayBuffer();
-      const result = await mammoth.extractRawText({ arrayBuffer });
-      return { content: result.value };
-    } else if (extension === 'txt' || extension === 'md') {
-      const text = await file.text();
-      return { content: text };
-    } else if (extension === 'json') {
+    if (extension === 'json') {
       const json = JSON.parse(await file.text());
       return { content: json.content || '', drawing: json.drawing };
     }
-    
-    throw new Error('Unsupported file format');
+    throw new Error('Please select a .json backup file');
+  },
+
+  generateWirelessLink: (content: string, drawing?: string): string => {
+    const data = JSON.stringify({ content, drawing });
+    // Using btoa for a simple wireless "transfer" string
+    const encoded = btoa(unescape(encodeURIComponent(data)));
+    const url = new URL(window.location.href);
+    url.hash = `share=${encoded}`;
+    return url.toString();
+  },
+
+  parseWirelessLink: (hash: string): { content: string, drawing?: string } | null => {
+    if (!hash.startsWith('#share=')) return null;
+    try {
+      const encoded = hash.replace('#share=', '');
+      const decoded = decodeURIComponent(escape(atob(encoded)));
+      return JSON.parse(decoded);
+    } catch (e) {
+      console.error("Failed to parse wireless link", e);
+      return null;
+    }
   }
 };
